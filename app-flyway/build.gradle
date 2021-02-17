@@ -1,0 +1,27 @@
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+plugins {
+    id "org.flywaydb.flyway" version "7.5.2"
+}
+
+dependencies {
+    implementation 'mysql:mysql-connector-java'
+}
+
+task migrateOrderService(type: FlywayMigrateTask) {
+    url = 'jdbc:mysql://localhost:3307/order_service?useSSL=false'
+    user = 'order_service_user'
+    password = 'order_service_password'
+    locations = ['classpath:db/migration/order_service']
+    baselineOnMigrate = true
+}
+migrateOrderService.dependsOn classes
+
+task migrateCustomerService(type: FlywayMigrateTask) {
+    url = 'jdbc:mysql://localhost:3307/customer_service?useSSL=false'
+    user = 'customer_service_user'
+    password = 'customer_service_password'
+    locations = ['classpath:db/migration/customer_service']
+    baselineOnMigrate = true
+}
+migrateCustomerService.dependsOn classes

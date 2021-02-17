@@ -1,0 +1,80 @@
+server:
+  port: 8082
+
+customer:
+  destinations:
+    customerServiceUrl: http://localhost:8081
+order:
+  destinations:
+    orderServiceUrl: http://localhost:8080
+
+spring:
+  webflux:
+    static-path-pattern: /**
+  application:
+    name: app-api-gateway
+  main:
+    web-application-type: reactive
+  sleuth:
+    enabled: true
+    sampler:
+      probability: 1
+  zipkin:
+    base-url: http://localhost:9411/
+  web:
+    resources:
+      static-locations: classpath:/static, classpath:META-INF/swagger-ui
+  cloud:
+    gateway:
+      routes:
+        - id: create_customer
+          uri: ${customer.destinations.customerServiceUrl}
+          predicates:
+            - Method=POST
+            - Path=/api/v1/customers
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+            - TokenRelay=
+        - id: create_order
+          uri: ${order.destinations.orderServiceUrl}
+          predicates:
+            - Method=POST
+            - Path=/api/v1/orders
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+            - TokenRelay=
+        - id: get_order
+          uri: ${order.destinations.orderServiceUrl}
+          predicates:
+            - Method=GET
+            - Path=/api/v1/orders/{orderId}
+          filters:
+            - CircuitBreaker=myCircuitBreaker
+            - TokenRelay=
+
+apigateway:
+  timeout:
+    millis: 1000
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 1
+        waitDurationInOpenState: 10000
+        failureRateThreshold: 60
+
+okta:
+  oauth2:
+    issuer: https://gmail-wizard-20210215.okta.com/oauth2/default
+    client-id: 0oa61wix1I700LACx5d6
+    client-secret: sqaM-I-IKiwHhWqnWzzJyrLZT2fLcNB43Mu0j9NO
+    scopes:
+      - openid
+
+logging:
+  level:
+    io:
+      github:
+        resilience4j: DEBUG

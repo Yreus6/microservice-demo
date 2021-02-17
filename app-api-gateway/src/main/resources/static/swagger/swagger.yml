@@ -1,0 +1,193 @@
+openapi: 3.0.1
+paths:
+  /api/v1/customers:
+    post:
+      operationId: createCustomer
+      parameters: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerDto'
+        required: true
+      responses:
+        default:
+          description: create customer response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerResponse'
+  /api/v1/customers/{customerId}:
+    get:
+      operationId: getCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: get customer response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerResponse'
+  /api/v1/customers/{customerId}/order-history:
+    get:
+      operationId: getOrderHistory
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: get order history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerHistoryResponse'
+  /api/v1/orders:
+    post:
+      operationId: createOrder
+      parameters: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateOrderDto'
+        required: true
+      responses:
+        default:
+          description: create order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrderResponse'
+  /api/v1/orders/{orderId}:
+    get:
+      operationId: getOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: get order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrderResponse'
+  /api/v1/orders/customers/{customerId}:
+    get:
+      operationId: getOrdersByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: get orders by customer id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetOrderResponse'
+info:
+  title: api gateway
+  version: v1
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    MonetaryAmount:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+    CreateCustomerDto:
+      type: object
+      properties:
+        name:
+          type: string
+        creditLimit:
+          type: string
+    CreateOrderDto:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+        totalPrice:
+          type: string
+    GetOrderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        customerId:
+          type: integer
+          format: int32
+        totalPrice:
+          $ref: '#/components/schemas/MonetaryAmount'
+        state:
+          $ref: '#/components/schemas/OrderState'
+        rejectionReason:
+          $ref: '#/components/schemas/RejectionReason'
+    GetCustomerResponse:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        creditLimit:
+          $ref: '#/components/schemas/MonetaryAmount'
+    GetCustomerHistoryResponse:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        creditLimit:
+          $ref: '#/components/schemas/MonetaryAmount'
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetOrderResponse'
+    OrderState:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+    RejectionReason:
+      type: string
+      enum:
+        - UNKNOWN_CUSTOMER
+        - INSUFFICIENT_CREDIT

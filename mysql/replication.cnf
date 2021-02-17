@@ -1,0 +1,10 @@
+[mysqld]
+log-bin=mysql-bin
+character-set-server=latin1
+server-id=1
+
+[client]
+default-character-set=latin1
+
+[mysql]
+default-character-set=latin1

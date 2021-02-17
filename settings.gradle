@@ -1,0 +1,11 @@
+rootProject.name = 'eventuate-saga-demo'
+
+include 'app-flyway'
+include 'app-common'
+include 'app-api-gateway'
+
+include 'app-order-service'
+include 'app-order-service-api'
+
+include 'app-customer-service'
+include 'app-customer-service-api'

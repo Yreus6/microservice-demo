@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-service
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  datasource:
+    url: jdbc:mysql://localhost:3307/order_service?useSSL=false
+    username: order_service_user
+    password: order_service_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  zookeeper:
+    connection:
+      string: localhost:2181
+
+eventuate:
+  database:
+    schema: order_service
+
+okta:
+  oauth2:
+    issuer: https://gmail-wizard-20210215.okta.com/oauth2/default
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+    io:
+      eventuate: DEBUG

@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: customer-service
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  datasource:
+    url: jdbc:mysql://localhost:3307/customer_service?useSSL=false
+    username: customer_service_user
+    password: customer_service_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  zookeeper:
+    connection:
+      string: localhost:2181
+
+eventuate:
+  database:
+    schema: customer_service
+
+okta:
+  oauth2:
+    issuer: https://gmail-wizard-20210215.okta.com/oauth2/default
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+    io:
+      eventuate: DEBUG
