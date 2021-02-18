@@ -40,6 +40,7 @@ public class OrderServiceProxy {
     }
     
     public Mono<List<GetOrderResponse>> getOrdersByCustomerId(String customerId) {
+        
         return webClient.get()
             .uri(orderServiceUrl + "/api/v1/orders/customers/{customerId}", customerId)
             .exchangeToMono(response -> {

@@ -20,7 +20,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         // @formatter:off
-        http
+        http.csrf().disable()
             .authorizeExchange()
                 .anyExchange()
                 .authenticated()

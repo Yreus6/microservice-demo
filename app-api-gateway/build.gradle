@@ -36,4 +36,4 @@ test {
     useJUnitPlatform()
 }
 
-mainClassName = 'com.company.app.apigateway.ApiGatewayApplication'
+mainClassName = 'com.company.app.apigateway.main.ApiGatewayApplication'

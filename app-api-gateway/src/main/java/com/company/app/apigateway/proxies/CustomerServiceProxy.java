@@ -38,6 +38,7 @@ public class CustomerServiceProxy {
     }
     
     public Mono<GetCustomerResponse> getCustomerById(String customerId) {
+        
         return webClient.get()
             .uri(customerServiceUrl + "/api/v1/customers/{customerId}", customerId)
             .exchangeToMono(response -> {
